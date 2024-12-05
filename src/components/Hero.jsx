@@ -1,4 +1,8 @@
 import React, { useRef, useState } from "react";
+import Button from "./Button";
+import { TiLocationArrow } from "react-icons/ti";
+import { useGSAP } from "@gsap/react";
+
 const Hero = () => {
   const [currentIdx, setCurrentIdx] = useState(1);
   const [hasClicked, setHasClicked] = useState(false);
@@ -12,10 +16,35 @@ const Hero = () => {
     setHasClicked(true);
     setCurrentIdx(upcomingVideoIdx);
   };
+
   const getVideoSrc = (index) => `videos/hero-${index}.mp4`;
+
   const handleVideoLoad = () => {
     setLoadedVideos((prev) => prev + 1);
   };
+
+  useGSAP(
+    () => {
+      if (hasClicked) {
+        gsap.set('#next-video',{visibility:'visible'});
+        gsap.to('#next-video',{
+          transformOrigin:'center center',
+          scale:1,
+          width:'100%',
+          height:'100%',
+          duration:1,
+          ease:'power1.inOut',
+          onStart:() => nextVideoRef.current.play()
+        })
+        gsap.from('#current-video',{
+          
+        })
+      }
+    },
+    { dependencies: [currentIdx], revertOnUpdate: true }
+  );
+
+  
   return (
     <div className=" relative h-dvh w-screen overflow-x-auto">
       <div
@@ -61,13 +90,26 @@ const Hero = () => {
           Madhav
         </h1>
 
-        <div className=" absolute left-0 top-0 z-40 size-full">
-            <div className=" mt-24 px-10 md:px-5">
-                <h1 className="special-font hero-heading text-blue-75">Redefine <b>S</b>h<b>a</b>ring</h1>
-                <p className="mb-5 max-w-64 font-robert-regular text-blue-100">Enter the Metagame Here</p>
-            </div>
+        <div className="absolute left-0 top-0 z-40 size-full">
+          <div className=" mt-24 px-10 md:px-5">
+            <h1 className="special-font hero-heading text-blue-75">
+              Redefine <b>S</b>h<b>a</b>ring
+            </h1>
+            <p className="mb-5 max-w-64 font-robert-regular text-blue-100">
+              Enter the Metagame Here
+            </p>
+            <Button
+              id="watch-trailer"
+              title={"Watch Trailer"}
+              leftIcon={<TiLocationArrow />}
+              containerClass={"bg-yellow-300 flex-center gap-1"}
+            />
+          </div>
         </div>
       </div>
+      <h1 className=" special-font hero-heading absolute bottom-5 right-5 text-black">
+        Madhav
+      </h1>
     </div>
   );
 };
